@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from api import searializers
 from api.models import Firmware
-from api.searializers import FirmwareSearializer
+from api.searializers import FirmwareSearializer, PostSearializer
 
 # Create your views here.
 @api_view(["GET"])
@@ -18,6 +18,19 @@ def addFileLink(request):
     try:
        # print(request.data)
         serializer = FirmwareSearializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status" : "success"},status = 200)
+        else:
+             return Response({"status" : "failed"},status = 400)
+    except:
+        return Response({"status" : "server-failure"},status = 400)
+
+@api_view(["POST"])
+def addPost(request):
+    try:
+       # print(request.data)
+        serializer = PostSearializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"status" : "success"},status = 200)
